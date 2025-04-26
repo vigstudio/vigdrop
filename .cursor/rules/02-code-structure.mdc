@@ -1,0 +1,42 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Code Structure Guide
+
+## Backend Architecture
+
+The backend is built with Node.js and uses the following structure:
+
+- [server.js](mdc:server.js)
+  - WebSocket server setup
+  - HTTP endpoints for file transfers
+  - Device management logic
+  
+- [database.js](mdc:database.js)
+  - SQLite database operations
+  - Device persistence
+  - Connection tracking
+
+## Frontend Organization
+
+The frontend assets are located in the [public/](mdc:public) directory:
+
+- HTML/CSS for the user interface
+- JavaScript for real-time communication
+- Assets and icons
+
+## Data Flow
+
+1. Device Discovery
+   - Devices connect via WebSocket
+   - Server maintains active device list
+   - Clients receive updates about nearby devices
+
+2. File Transfer
+   - Sender uploads file to server
+   - Server notifies recipient
+   - Recipient downloads file
+   - Server cleans up temporary files
+
