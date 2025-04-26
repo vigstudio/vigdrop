@@ -1,0 +1,41 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Development Guidelines
+
+This document outlines the development practices and coding standards for the SnapDrop project.
+
+## Code Style
+- Use consistent indentation (2 spaces)
+- Follow JavaScript ES6+ conventions
+- Use meaningful variable and function names
+- Add comments for complex logic
+
+## File Management
+- Keep the `uploads/` directory clean - files should be automatically removed after transfer
+- Static assets go in the `public/` directory
+- Database schema changes must be documented
+
+## Error Handling
+- All API endpoints should have proper error handling
+- Log errors appropriately
+- Return meaningful error messages to clients
+
+## WebSocket Communication
+- Follow the established message format for device discovery
+- Handle connection errors gracefully
+- Implement proper cleanup on disconnection
+
+## Security
+- Validate all user inputs
+- Implement file size limits
+- Check file types before upload
+- No sensitive data in logs
+
+## Testing
+- Test new features before deployment
+- Verify file transfers work across different devices
+- Check browser compatibility
+
