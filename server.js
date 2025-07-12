@@ -38,7 +38,7 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({storage: storage});
 
 // Serve static files
 app.use(express.static('public'));
@@ -59,17 +59,17 @@ const fileExpiryTimes = new Map();
 function scheduleFileDeletion(filePath, fileId) {
     const expiryTime = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
     const deleteTime = Date.now() + expiryTime;
-    
+
     fileExpiryTimes.set(fileId, deleteTime);
-    
+
     setTimeout(() => {
         try {
             fs.unlinkSync(filePath);
             fileExpiryTimes.delete(fileId);
             console.log(`File deleted: ${filePath}`);
-            
+
             // Notify clients about file deletion
-            io.emit('fileDeleted', { fileId });
+            io.emit('fileDeleted', {fileId});
         } catch (err) {
             console.error(`Error deleting file: ${err.message}`);
         }
@@ -77,50 +77,60 @@ function scheduleFileDeletion(filePath, fileId) {
 }
 
 // Route for file upload
-app.post('/upload', upload.single('file'), (req, res) => {
+app.post('/upload', upload.single('file'), async (req, res) => {
     if (!req.file) {
         return res.status(400).send('No file was uploaded');
     }
-    
+
     const fileId = req.file.filename;
     const filePath = path.join(uploadsDir, fileId);
-    
-    const fileInfo = {
-        id: fileId,
-        name: req.file.originalname,
-        size: req.file.size,
-        path: '/uploads/' + fileId,
-        uploadedAt: new Date(),
-        expiresAt: new Date(Date.now() + 3 * 60 * 60 * 1000), // Expiration time
-        sender: req.body.senderId,
-        receiver: req.body.receiverId
-    };
-    
-    // Schedule file deletion
-    scheduleFileDeletion(filePath, fileId);
-    
-    // Send notification to specific receiving device
-    if (fileInfo.receiver) {
-        const receiverSocket = connectedDevices.get(fileInfo.receiver);
-        if (receiverSocket) {
-            receiverSocket.emit('newFile', fileInfo);
+
+    try {
+        // Get sender device name from database
+        const senderDevice = await db.getDevice(req.body.senderId);
+        const senderName = senderDevice ? senderDevice.name : 'Unknown Device';
+
+        const fileInfo = {
+            id: fileId,
+            name: req.file.originalname,
+            size: req.file.size,
+            path: '/uploads/' + fileId,
+            uploadedAt: new Date(),
+            expiresAt: new Date(Date.now() + 3 * 60 * 60 * 1000), // Expiration time
+            senderId: req.body.senderId,
+            senderName: senderName,
+            receiver: req.body.receiverId
+        };
+
+        // Schedule file deletion
+        scheduleFileDeletion(filePath, fileId);
+
+        // Send notification to specific receiving device
+        if (fileInfo.receiver) {
+            const receiverSocket = connectedDevices.get(fileInfo.receiver);
+            if (receiverSocket) {
+                receiverSocket.emit('newFile', fileInfo);
+            }
         }
+
+        res.json(fileInfo);
+    } catch (error) {
+        console.error('Error processing file upload:', error);
+        res.status(500).json({error: 'Failed to process file upload'});
     }
-    
-    res.json(fileInfo);
 });
 
 // Handle WebSocket connections
 io.on('connection', async (socket) => {
     console.log('Client connected');
-    
+
     // Save device information on connection
     socket.on('registerDevice', async (deviceInfo) => {
         try {
             // Save device information to database
             await db.saveDevice(deviceInfo);
             connectedDevices.set(deviceInfo.id, socket);
-            
+
             // Send device list to all clients
             await broadcastDeviceList();
         } catch (err) {
@@ -136,13 +146,13 @@ io.on('connection', async (socket) => {
                 // Save new name to database
                 await db.saveDevice(deviceInfo);
                 deviceSocket.deviceName = deviceInfo.name;
-                
+
                 // Send update notification to all clients
                 io.emit('deviceNameUpdated', {
                     id: deviceInfo.id,
                     name: deviceInfo.name
                 });
-                
+
                 // Update device list
                 await broadcastDeviceList();
             }
@@ -150,7 +160,7 @@ io.on('connection', async (socket) => {
             console.error('Error updating device name:', err);
         }
     });
-    
+
     socket.on('disconnect', async () => {
         console.log('Client disconnected');
         // Remove device from list on disconnect
@@ -169,16 +179,16 @@ async function broadcastDeviceList() {
     try {
         // Get device list from database
         const devices = await db.getAllDevices();
-        
+
         // Filter online devices
-        const onlineDevices = devices.filter(device => 
+        const onlineDevices = devices.filter(device =>
             connectedDevices.has(device.id)
         ).map(device => ({
             id: device.id,
             name: device.name,
             type: device.type
         }));
-        
+
         io.emit('deviceList', onlineDevices);
     } catch (err) {
         console.error('Error sending device list:', err);

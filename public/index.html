@@ -20,87 +20,446 @@
     <link rel="stylesheet" href="/css/style.css">
     <style>
         :root {
-            --primary-color: #4a6bff;
-            --secondary-color: #f8f9fa;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --text-color: #2c3e50;
-            --border-color: #e9ecef;
+            /* Modern Color Palette */
+            --primary-color: #6366f1;
+            --primary-light: #a5b4fc;
+            --primary-dark: #4338ca;
+            --secondary-color: #f1f5f9;
+            --secondary-dark: #e2e8f0;
+            --success-color: #10b981;
+            --success-light: #6ee7b7;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --danger-light: #fca5a5;
+
+            /* Neutral Colors */
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+
+            /* Text Colors */
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --text-light: #94a3b8;
+
+            /* Background Colors */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+
+            /* Border & Shadow */
+            --border-color: #e2e8f0;
+            --border-light: #f1f5f9;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+            /* Border Radius */
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-2xl: 1.5rem;
+
+            /* Spacing */
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-5: 1.25rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            --space-10: 2.5rem;
+            --space-12: 3rem;
+
+            /* Typography */
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+
+            /* Transitions */
+            --transition-fast: 150ms ease-in-out;
+            --transition-normal: 250ms ease-in-out;
+            --transition-slow: 350ms ease-in-out;
+        }
+
+        /* Reset and Base Styles */
+        * {
+            box-sizing: border-box;
         }
 
         body {
-            background-color: #f5f7ff;
-            color: var(--text-color);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            margin: 0;
+            min-height: 100vh;
         }
 
+        /* Modern Navbar */
         .navbar {
-            background-color: white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 1rem 0;
+            background: var(--bg-primary);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: var(--space-4) 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .navbar .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-6);
         }
 
         .navbar-brand {
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 1.25rem;
             color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
         }
 
+        .navbar-brand i {
+            font-size: 1.5rem;
+        }
+
+        /* Connection Status Indicator */
+        .connection-status {
+            display: flex;
+            align-items: center;
+        }
+
+        .connection-indicator {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-xl);
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: var(--transition-normal);
+            border: 1px solid transparent;
+        }
+
+        .connection-indicator.connected {
+            background: linear-gradient(135deg, var(--success-color), var(--success-light));
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .connection-indicator.disconnected {
+            background: linear-gradient(135deg, var(--danger-color), var(--danger-light));
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .connection-indicator.connecting {
+            background: linear-gradient(135deg, var(--warning-color), #fbbf24);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .connection-indicator.reconnecting {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .connection-indicator i {
+            font-size: 1rem;
+        }
+
+        .connection-indicator.connecting i,
+        .connection-indicator.reconnecting i {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.7;
+                transform: scale(1.1);
+            }
+        }
+
+        /* Modern Device Cards */
         .device-card {
-            background: white;
-            border-radius: 12px;
-            border: none;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
+            background: var(--bg-primary);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-normal);
             cursor: pointer;
             overflow: hidden;
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        .device-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+            opacity: 0;
+            transition: var(--transition-normal);
         }
 
         .device-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary-light);
+        }
+
+        .device-card:hover::before {
+            opacity: 1;
         }
 
         .device-card.selected {
             border: 2px solid var(--primary-color);
+            box-shadow: var(--shadow-lg);
+            transform: scale(1.05);
+        }
+
+        .device-card.selected::before {
+            opacity: 1;
         }
 
         .device-icon {
-            font-size: 2.5rem;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--space-4);
+            display: flex;
+            justify-content: center;
         }
 
         .device-name {
-            font-weight: 600;
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
+            font-weight: 700;
+            font-size: 1.125rem;
+            margin-bottom: var(--space-2);
+            color: var(--text-primary);
         }
 
         .device-status {
-            font-size: 0.85rem;
-            color: #6c757d;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
         }
 
+        /* Main Layout */
+        .main-content {
+            padding: var(--space-8) 0;
+            min-height: calc(100vh - 80px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-6);
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: var(--space-8);
+            align-items: start;
+        }
+
+        /* Modern Cards */
+        .card {
+            background: var(--bg-primary);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            transition: var(--transition-normal);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-body {
+            padding: var(--space-6);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--space-6);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+
+        .card-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            border-radius: var(--radius-sm);
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-6);
+        }
+
+        /* Current Device Card */
+        .current-device-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            color: white;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .current-device-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .device-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            margin-bottom: var(--space-4);
+        }
+
+        .current-device-card .device-icon {
+            font-size: 2.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-lg);
+            padding: var(--space-3);
+            backdrop-filter: blur(10px);
+        }
+
+        .current-device-card .device-icon i {
+            color: white;
+        }
+
+        .device-info .device-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: var(--space-1);
+        }
+
+        .device-info .device-status {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .rename-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-lg);
+            font-weight: 600;
+            transition: var(--transition-normal);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+        }
+
+        .rename-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Modern Upload Area */
         .upload-area {
-            background: white;
+            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
             border: 2px dashed var(--border-color);
-            border-radius: 12px;
-            padding: 2rem;
+            border-radius: var(--radius-xl);
+            padding: var(--space-10);
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 1rem 0;
+            transition: var(--transition-normal);
+            margin: var(--space-4) 0;
             position: relative;
+            overflow: hidden;
         }
 
-        .upload-area:hover {
-            border-color: var(--primary-color);
-            background-color: var(--secondary-color);
+        .upload-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            opacity: 0;
+            transition: var(--transition-normal);
         }
 
+        .upload-area:hover,
         .upload-area.dragover {
             border-color: var(--primary-color);
-            background-color: var(--secondary-color);
+            transform: scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .upload-area:hover::before,
+        .upload-area.dragover::before {
+            opacity: 0.05;
+        }
+
+        .upload-area h5 {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--space-2);
+        }
+
+        .upload-area p {
+            color: var(--text-muted);
+            margin-bottom: 0;
+        }
+
+        .upload-area i {
+            color: var(--primary-color);
+            margin-bottom: var(--space-4);
         }
 
         .upload-area.loading {
@@ -161,80 +520,142 @@
             transition: width 0.3s ease;
         }
 
+        /* Modern File List */
         .file-list {
-            background: white;
-            border-radius: 12px;
-            padding: 1rem;
-            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
         }
 
         .file-item {
             display: flex;
             align-items: center;
-            padding: 1rem;
-            border-bottom: 1px solid var(--border-color);
-            transition: all 0.3s ease;
+            padding: var(--space-5);
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            transition: var(--transition-normal);
+            position: relative;
+            overflow: hidden;
         }
 
-        .file-item:last-child {
-            border-bottom: none;
+        .file-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            opacity: 0;
+            transition: var(--transition-normal);
         }
 
         .file-item:hover {
-            background-color: var(--secondary-color);
+            background: var(--bg-secondary);
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .file-item:hover::before {
+            opacity: 1;
         }
 
         .file-icon {
-            font-size: 1.5rem;
-            color: var(--primary-color);
-            margin-right: 1rem;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            border-radius: var(--radius-lg);
+            margin-right: var(--space-4);
+            color: white;
+            font-size: 1.25rem;
         }
 
         .file-info {
             flex: 1;
+            min-width: 0;
         }
 
         .file-name {
-            font-weight: 500;
-            margin-bottom: 0.25rem;
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: var(--space-1);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .file-meta {
-            font-size: 0.85rem;
-            color: #6c757d;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
         }
 
         .file-actions {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: var(--space-3);
         }
 
+        /* Modern Buttons */
         .btn-icon {
-            width: 36px;
-            height: 36px;
+            width: 44px;
+            height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 50%;
-            border: none;
-            background: var(--secondary-color);
-            color: var(--primary-color);
-            transition: all 0.3s ease;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            transition: var(--transition-normal);
+            cursor: pointer;
+            font-size: 1.125rem;
         }
 
         .btn-icon:hover {
             background: var(--primary-color);
             color: white;
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
         .btn-download {
-            background: var(--success-color);
+            background: linear-gradient(135deg, var(--success-color), var(--success-light));
             color: white;
+            border-color: var(--success-color);
         }
 
         .btn-download:hover {
-            background: #218838;
+            background: linear-gradient(135deg, #059669, var(--success-color));
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        .retry-button {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            border: none;
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-lg);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .retry-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
         .expiry-badge {
@@ -336,36 +757,254 @@
             color: white;
         }
 
+        /* Modern Empty States */
         .empty-state {
             text-align: center;
-            padding: 3rem 1rem;
-            color: #6c757d;
+            padding: var(--space-12) var(--space-6);
+            color: var(--text-muted);
         }
 
-        .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: var(--border-color);
+        .empty-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto var(--space-6);
+            background: linear-gradient(135deg, var(--gray-100), var(--gray-200));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .empty-icon i {
+            font-size: 2rem;
+            color: var(--text-light);
+        }
+
+        .empty-state h6 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-3);
+        }
+
+        .empty-state p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: var(--space-6);
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Loading states */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            backdrop-filter: blur(2px);
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .device-loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .retry-button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+        }
+
+        .retry-button:hover {
+            background: #3a5bff;
+        }
+
+        .error-message {
+            background: rgba(220, 53, 69, 0.1);
+            color: var(--danger-color);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid var(--danger-color);
+        }
+
+        .success-message {
+            background: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid var(--success-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .content-grid {
+                grid-template-columns: 320px 1fr;
+                gap: var(--space-6);
+            }
         }
 
         @media (max-width: 768px) {
             .container {
-                padding: 0 1rem;
+                padding: 0 var(--space-4);
             }
 
-            .device-list {
+            .navbar .container {
+                padding: 0 var(--space-4);
+            }
+
+            .navbar-brand {
+                font-size: 1.125rem;
+            }
+
+            .connection-indicator span {
+                display: none;
+            }
+
+            .content-grid {
                 grid-template-columns: 1fr;
+                gap: var(--space-6);
+            }
+
+            .main-content {
+                padding: var(--space-6) 0;
+            }
+
+            .current-device-card {
+                padding: var(--space-5);
+            }
+
+            .device-header {
+                flex-direction: column;
+                text-align: center;
+                gap: var(--space-3);
+            }
+
+            .current-device-card .device-icon {
+                font-size: 2rem;
+                padding: var(--space-2);
+            }
+
+            .device-info .device-name {
+                font-size: 1.125rem;
             }
 
             .file-item {
                 flex-direction: column;
                 align-items: flex-start;
+                gap: var(--space-4);
             }
 
             .file-actions {
-                margin-top: 0.5rem;
                 width: 100%;
                 justify-content: flex-end;
+            }
+
+            .btn-icon {
+                width: 48px;
+                height: 48px;
+            }
+
+            .modal-dialog {
+                margin: var(--space-4);
+            }
+
+            .modal-header,
+            .modal-body,
+            .modal-footer {
+                padding: var(--space-4);
+            }
+
+            .empty-state {
+                padding: var(--space-8) var(--space-4);
+            }
+
+            .empty-icon {
+                width: 60px;
+                height: 60px;
+            }
+
+            .empty-icon i {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar-brand {
+                font-size: 1rem;
+            }
+
+            .connection-indicator {
+                padding: var(--space-1) var(--space-3);
+                font-size: 0.75rem;
+            }
+
+            .current-device-card {
+                padding: var(--space-4);
+            }
+
+            .card-body {
+                padding: var(--space-4);
+            }
+
+            .file-item {
+                padding: var(--space-4);
+            }
+
+            .file-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+
+            .btn-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            .device-card:hover {
+                transform: none;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            }
+
+            .file-item:hover {
+                background-color: transparent;
+            }
+
+            .btn-icon:hover {
+                background: var(--secondary-color);
+                color: var(--primary-color);
+            }
+
+            .btn-download:hover {
+                background: var(--success-color);
             }
         }
     </style>
@@ -378,60 +1017,99 @@
                 <i class="bi bi-share-fill me-2"></i>
                 VigDrop - Quick File Sharing
             </span>
+            <div class="connection-status" id="connectionStatus">
+                <div class="connection-indicator" id="connectionIndicator">
+                    <i class="bi bi-wifi" id="connectionIcon"></i>
+                    <span id="connectionText">Connecting...</span>
+                </div>
+            </div>
         </div>
     </nav>
 
-    <div class="container mt-4">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card device-card mb-4">
-                    <div class="card-body text-center">
-                        <div class="device-icon">
-                            <i id="currentDeviceIcon" class="bi bi-pc-display"></i>
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="content-grid">
+                <!-- Left Sidebar -->
+                <aside class="sidebar">
+                    <!-- Current Device Card -->
+                    <div class="current-device-card" role="region" aria-label="Current device information">
+                        <div class="device-header">
+                            <div class="device-icon">
+                                <i id="currentDeviceIcon" class="bi bi-pc-display" aria-hidden="true"></i>
+                            </div>
+                            <div class="device-info">
+                                <div class="device-name" id="currentDeviceName">Connecting...</div>
+                                <div class="device-status" id="currentDeviceStatus">Not registered</div>
+                            </div>
                         </div>
-                        <div class="device-name" id="currentDeviceName">Connecting...</div>
-                        <div class="device-status" id="currentDeviceStatus">Not registered</div>
-                        <button id="renameDevice" class="btn btn-link mt-2">
-                            <i class="bi bi-pencil"></i> Rename
+                        <button id="renameDevice" class="rename-btn" aria-label="Rename this device">
+                            <i class="bi bi-pencil" aria-hidden="true"></i>
+                            <span>Rename Device</span>
                         </button>
                     </div>
-                </div>
 
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title mb-3">Devices in network</h5>
-                        <div class="device-list" id="deviceList">
-                            <!-- Device list will be added here -->
+                    <!-- Available Devices -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                Available Devices
+                            </h5>
+                            <div class="device-list" id="deviceList">
+                                <!-- Device list will be added here -->
+                            </div>
+                            <div class="empty-state" id="noDevicesMessage" style="display: none;">
+                                <div class="empty-icon">
+                                    <i class="bi bi-search"></i>
+                                </div>
+                                <h6>No devices found</h6>
+                                <p>Waiting for other devices to connect...</p>
+                                <button class="retry-button" onclick="refreshDevices()">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                    Refresh
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                </aside>
 
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title mb-3">Shared files</h5>
-                        <div class="file-list" id="fileList">
-                            <!-- File list will be added here -->
+                <!-- Main Content Area -->
+                <section class="main-panel">
+                    <div class="card files-card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                Shared Files
+                            </h5>
+                            <div class="file-list" id="fileList">
+                                <!-- File list will be added here -->
+                            </div>
+                            <div class="empty-state" id="noFilesMessage" style="display: block;">
+                                <div class="empty-icon">
+                                    <i class="bi bi-cloud-arrow-down"></i>
+                                </div>
+                                <h6>No shared files</h6>
+                                <p>Files shared with you will appear here. Select a device to start sharing files.</p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </section>
             </div>
         </div>
-    </div>
+    </main>
 
     <!-- Device rename modal -->
-    <div class="modal fade" id="renameModal" tabindex="-1">
+    <div class="modal fade" id="renameModal" tabindex="-1" aria-labelledby="renameModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Rename device</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title" id="renameModalLabel">Rename device</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="newDeviceName" class="form-label">New name</label>
-                        <input type="text" class="form-control" id="newDeviceName">
+                        <input type="text" class="form-control" id="newDeviceName" maxlength="50" required aria-describedby="deviceNameHelp">
+                        <div id="deviceNameHelp" class="form-text">Enter a friendly name for this device (max 50 characters)</div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -443,19 +1121,19 @@
     </div>
 
     <!-- File upload modal -->
-    <div class="modal fade" id="uploadModal" tabindex="-1">
+    <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Share with <span id="selectedDeviceName"></span></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title" id="uploadModalLabel">Share with <span id="selectedDeviceName"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="upload-area" id="uploadArea">
-                        <i class="bi bi-cloud-upload" style="font-size: 3rem;"></i>
+                    <div class="upload-area" id="uploadArea" role="button" tabindex="0" aria-label="Click or drag files here to upload">
+                        <i class="bi bi-cloud-upload" style="font-size: 3rem;" aria-hidden="true"></i>
                         <h5 class="mt-3">Drag and drop files here</h5>
                         <p class="text-muted">or click to select files</p>
-                        <div class="upload-progress">
+                        <div class="upload-progress" role="progressbar" aria-label="Upload progress">
                             <div class="upload-progress-bar" id="uploadProgress"></div>
                         </div>
                     </div>
@@ -526,4 +1204,5 @@
     <script src="/js/bootstrap.bundle.min.js"></script>
     <script src="/js/app.js"></script>
 </body>
+
 </html>
